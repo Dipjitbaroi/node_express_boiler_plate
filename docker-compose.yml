@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  api:
+    container_name: sports_services_be_staging
+    image: sports_services_image
+    build: 
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - "9001:9001"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - PORT=9001
+      - DB_URL=mongodb+srv://jsencoder:hellofromtheotherside@cluster0.onulisf.mongodb.net/sports?authMechanism=SCRAM-SHA-1
+      - TOKEN_SECRET=sdlkjfdasnfmouficksdmnciavasdlkacnlk
+      - CASINO_SECRET=saZbCdDeFgHiJkLmNoPqRsTuVwXyZaBcDeFg
+
+  nginx:
+    container_name: nginx
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - api
